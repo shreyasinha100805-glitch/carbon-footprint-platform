@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Calculate and reduce your personal carbon footprint">
+<title>Carbon Footprint Awareness Platform</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>🌍 Carbon Footprint Calculator</h1>
+    <p class="subtitle">Estimate your monthly carbon footprint and learn how to reduce it.</p>
+
+    <form id="footprint-form" aria-label="Carbon footprint calculator form">
+      <label for="car">Car travel (km/week)</label>
+      <input type="number" id="car" min="0" max="5000" value="0" required aria-describedby="car-hint">
+      <span id="car-hint" class="sr-only">Enter kilometers traveled by car per week</span>
+
+      <label for="public-transport">Public transport (km/week)</label>
+      <input type="number" id="public-transport" min="0" max="5000" value="0" required>
+
+      <label for="flights">Flights taken per year</label>
+      <input type="number" id="flights" min="0" max="100" value="0" required>
+
+      <label for="electricity">Electricity usage (units/month)</label>
+      <input type="number" id="electricity" min="0" max="10000" value="0" required>
+
+      <label for="diet">Diet type</label>
+      <select id="diet" required>
+        <option value="vegan">Vegan</option>
+        <option value="vegetarian">Vegetarian</option>
+        <option value="nonveg">Non-Vegetarian</option>
+      </select>
+
+      <button type="submit">Calculate Footprint</button>
+    </form>
+
+    <section id="result" class="result hidden" aria-live="polite">
+      <h2>Your Estimated Footprint</h2>
+      <p id="total-emission"></p>
+      <div id="breakdown"></div>
+      <h3>♻️ Tips to Reduce Your Footprint</h3>
+      <ul id="tips"></ul>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
