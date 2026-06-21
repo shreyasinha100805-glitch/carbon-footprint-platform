@@ -40,6 +40,21 @@ function badgeFor(total) {
   return { label: '🔴 High Footprint', cls: 'high' };
 }
 
+// Cache DOM lookups once for better runtime efficiency
+const els = {
+  form: document.getElementById('footprint-form'),
+  car: document.getElementById('car'),
+  publicTransport: document.getElementById('public-transport'),
+  flights: document.getElementById('flights'),
+  electricity: document.getElementById('electricity'),
+  diet: document.getElementById('diet'),
+  result: document.getElementById('result'),
+  totalEmission: document.getElementById('total-emission'),
+  breakdown: document.getElementById('breakdown'),
+  tips: document.getElementById('tips'),
+  scoreBadge: document.getElementById('score-badge')
+};
+
 function renderResult(result, diet) {
   const max = Math.max(result.carEmission, result.publicEmission, result.flightEmission, result.electricityEmission, result.dietEmission, 1);
   const items = [
@@ -51,34 +66,31 @@ function renderResult(result, diet) {
   ];
 
   const badge = badgeFor(result.total);
-  const badgeEl = document.getElementById('score-badge');
-  badgeEl.textContent = badge.label;
-  badgeEl.className = `score-badge ${badge.cls}`;
+  els.scoreBadge.textContent = badge.label;
+  els.scoreBadge.className = `score-badge ${badge.cls}`;
 
-  document.getElementById('total-emission').textContent =
+  els.totalEmission.textContent =
     `${result.total.toFixed(1)} kg CO₂/month (~${(result.total * 12 / 1000).toFixed(2)} tons/year)`;
 
-  document.getElementById('breakdown').innerHTML = items.map(([label, val]) => `
+  els.breakdown.innerHTML = items.map(([label, val]) => `
     <div class="bar-row">
       <div class="bar-label"><span>${label}</span><span>${val.toFixed(1)} kg</span></div>
       <div class="bar-track"><div class="bar-fill" style="width:${(val / max * 100).toFixed(0)}%"></div></div>
     </div>
   `).join('');
 
-  document.getElementById('tips').innerHTML =
-    getTips({ ...result, diet }).map(t => `<li>${t}</li>`).join('');
-
-  document.getElementById('result').classList.remove('hidden');
+  els.tips.innerHTML = getTips({ ...result, diet }).map(t => `<li>${t}</li>`).join('');
+  els.result.classList.remove('hidden');
 }
 
-document.getElementById('footprint-form').addEventListener('submit', function (e) {
+els.form.addEventListener('submit', function (e) {
   e.preventDefault();
   const inputs = {
-    car: safeNumber(document.getElementById('car').value, 5000),
-    publicTransport: safeNumber(document.getElementById('public-transport').value, 5000),
-    flights: safeNumber(document.getElementById('flights').value, 100),
-    electricity: safeNumber(document.getElementById('electricity').value, 10000),
-    diet: document.getElementById('diet').value
+    car: safeNumber(els.car.value, 5000),
+    publicTransport: safeNumber(els.publicTransport.value, 5000),
+    flights: safeNumber(els.flights.value, 100),
+    electricity: safeNumber(els.electricity.value, 10000),
+    diet: els.diet.value
   };
   renderResult(calculateFootprint(inputs), inputs.diet);
 });
